@@ -1,1 +1,64 @@
-#meet-settings{border-top:1px solid #cbd4e1;margin-top:20px;padding-top:14px;font-size:12px}#meet-settings summary{cursor:pointer;font-weight:600;line-height:1.5}#meet-summary{display:inline-block;font-size:10px;font-weight:500;margin-left:7px;color:#687b96}#meet-status{line-height:1.5;color:#34445b;margin:12px 0}#meet-settings button{margin:0 6px 6px 0}#meet-steps{font-size:11px;line-height:1.6;padding-left:20px;margin:12px 0}#meet-steps li{margin-bottom:5px}#meet-folder-path{font-size:10px;color:#687b96;overflow-wrap:anywhere;user-select:text}#meet-error{color:#a13545;font-size:11px;line-height:1.5}#meet-setup-note,#meet-call-note{margin:10px 0}#meet-settings code{font:inherit;font-weight:600;user-select:text}
+#meet-settings {
+  border-top:1px solid #cbd4e1;
+  margin-top:20px;
+  padding-top:14px;
+  font-size:12px;
+}
+
+#meet-settings summary {
+  cursor:pointer;
+  font-weight:600;
+  line-height:1.5;
+}
+
+#meet-summary {
+  display:inline-block;
+  font-size:10px;
+  font-weight:500;
+  margin-left:7px;
+  color:#687b96;
+}
+
+#meet-status {
+  line-height:1.5;
+  color:#34445b;
+  margin:12px 0;
+}
+
+#meet-settings button {
+  margin:0 6px 6px 0;
+}
+
+#meet-steps {
+  font-size:11px;
+  line-height:1.6;
+  padding-left:20px;
+  margin:12px 0;
+}
+
+#meet-steps li {
+  margin-bottom:5px;
+}
+
+#meet-folder-path {
+  font-size:10px;
+  color:#687b96;
+  overflow-wrap:anywhere;
+  user-select:text;
+}
+
+#meet-error {
+  color:#a13545;
+  font-size:11px;
+  line-height:1.5;
+}
+
+#meet-setup-note,#meet-call-note {
+  margin:10px 0;
+}
+
+#meet-settings code {
+  font:inherit;
+  font-weight:600;
+  user-select:text;
+}

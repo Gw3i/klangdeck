@@ -1,6 +1,7 @@
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const { normalizeVolume, parseVolume, createVolumeControl } = require('../electron/volume.cjs');
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import type { ExecFileOptions } from 'node:child_process';
+import { normalizeVolume, parseVolume, createVolumeControl } from '../build/electron/volume.cjs';
 
 test('rejects injection and nonfinite values; clamps numeric endpoints', () => {
   for (const value of ['50', '0; do shell script "bad"', NaN, Infinity, null, {}]) assert.throws(() => normalizeVolume(value));
@@ -14,7 +15,7 @@ test('parses real volume and mute state, rejecting malformed output', () => {
   for (const value of ['', '101|false', '42|unknown', 'output volume:42', '42|false\nbad']) assert.throws(() => parseVolume(value));
 });
 test('coalesces slider movement and uses a fixed executable without a shell', async () => {
-  const calls = [];
+  const calls: { file: string; args: string[]; options: ExecFileOptions }[] = [];
   const control = createVolumeControl(async (file, args, options) => {
     calls.push({ file, args, options });
     return { stdout: args[1].startsWith('set s') ? '70|false\n' : '' };
@@ -37,5 +38,5 @@ test('unsupported device rejects and a later request can recover', async () => {
 test('process failures reject all queued slider requests', async () => {
   const control = createVolumeControl(async () => { throw new Error('timeout'); });
   const results = await Promise.allSettled([control.setVolume(30), control.setVolume(40)]);
-  assert.ok(results.every(result => result.status === 'rejected' && result.reason.message === 'timeout'));
+  assert.ok(results.every(result => result.status === 'rejected' && result.reason instanceof Error && result.reason.message === 'timeout'));
 });

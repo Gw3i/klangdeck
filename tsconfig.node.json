@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": [
+      "es2023",
+      "dom"
+    ],
+    "types": [
+      "node"
+    ],
+    "noEmit": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": [
+    "tests/*.test.ts",
+    "scripts/*.ts"
+  ]
+}

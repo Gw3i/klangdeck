@@ -14,7 +14,7 @@ A local 3D soundboard for Apple Silicon Macs. Sixteen keys per bank, your own au
 
 Klangdeck must be running for the global shortcut to work. Sound keys work when its window has focus. If another app already uses the shortcut, open Klangdeck from the Dock.
 
-Imported audio and settings stay in `~/Library/Application Support/Klangdeck`. The app copies imported audio into its database, so you can move the original files afterward. Klangdeck has no cloud upload. The optional Chrome extension mixes sounds locally into a Google Meet call; other video-call apps are not supported.
+The Dock and menu bar show the name in lowercase, as klangdeck. Imported audio and settings stay in `~/Library/Application Support/Klangdeck`, with a capital K, the same folder earlier versions used, so updating keeps your sounds. The app copies imported audio into its database, so you can move the original files afterward. Klangdeck has no cloud upload. The optional Chrome extension mixes sounds locally into a Google Meet call; other video-call apps are not supported.
 
 ## Google Meet in Chrome
 
@@ -39,9 +39,23 @@ Color, fill, and motion are saved automatically and restored at launch. Turn off
 
 ## Development
 
-Use Node.js 24 or newer. Run `npm ci`, then `npm start`. `npm run dev` starts a browser preview; the global shortcut works only in the Mac app. `npm test` checks data migration, icon search, and native validation without changing user data.
+Use Node.js 24 or newer. Run `npm ci`, then `npm start`. `npm run dev` starts a browser preview; the global shortcut works only in the Mac app.
 
-`npm run package` creates a local arm64 app in the output folder. No Xcode project is required. The local app is not Developer ID signed or Apple notarized; public distribution is not configured.
+All maintained code is TypeScript, including CommonJS `.cts` sources for Electron. Strict checks reject unused variables and parameters. `npm run typecheck` checks four projects, one per runtime:
+
+| Folder | Runs in | Built by | Output |
+| --- | --- | --- | --- |
+| `src/` | the app window | Vite | `dist/` |
+| `electron/` | Electron main process, sandboxed preload, Chrome native host | `tsc` | `build/electron/*.cjs` |
+| `extension/` | Chrome (service worker, content scripts, popup) | `scripts/build-browser.ts` with Vite | `build/extension/` (one classic script per file, plus `manifest.json` and `popup.html`) |
+| `tests/*.test.ts`, `scripts/` | Node.js, which strips the types itself | none | none |
+| `tests/meet-audio-fixture.ts`, `tests/meet-audio-runner.cts` | hidden Electron window for `npm run test:audio` | the fixture like the extension, the runner with `tsc` | `build/tests/` |
+
+`shared/contracts.ts` holds the types the main process, preload and window share. `npm run build` typechecks and builds everything. `dist/` and `build/` are generated and not committed.
+
+`npm test` builds first, then tests the built Electron and extension files, the same ones the app ships. It checks data migration, icon search, and native validation without changing user data. `npm run test:audio` runs the isolated WebRTC loopback check with a simulated microphone in a hidden Electron window.
+
+`npm run package` creates a local arm64 `Klangdeck.app` in the output folder and replaces any earlier copy there. macOS shows it as klangdeck, and the bundle ID stays `local.klangdeck.soundboard`. No Xcode project is required. The local app is not Developer ID signed or Apple notarized; public distribution is not configured. `node scripts/build-icon.ts` rebuilds `assets/icon.icns` from `assets/icon.png` with the macOS `sips` and `iconutil` tools.
 
 ## Design and licenses
 

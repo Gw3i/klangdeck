@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "lib": [
+      "es2023",
+      "dom",
+      "dom.iterable"
+    ],
+    "types": [
+      "vite/client"
+    ],
+    "noEmit": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": [
+    "src",
+    "shared"
+  ]
+}
