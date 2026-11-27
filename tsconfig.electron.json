@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "lib": [
+      "es2023"
+    ],
+    "types": [
+      "node"
+    ],
+    "rootDir": ".",
+    "outDir": "build",
+    "declaration": true,
+    "esModuleInterop": true,
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": [
+    "electron/*.cts",
+    "tests/meet-audio-runner.cts"
+  ]
+}

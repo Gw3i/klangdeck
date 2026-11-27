@@ -4,14 +4,17 @@
   "description": "A tactile 3D soundboard for your Mac.",
   "private": true,
   "type": "module",
-  "main": "electron/main.cjs",
+  "main": "build/electron/main.cjs",
   "scripts": {
     "postinstall": "node node_modules/electron/install.js",
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build --base=./",
+    "typecheck": "tsc -p tsconfig.electron.json && tsc -p tsconfig.json && tsc -p tsconfig.browser.json && tsc -p tsconfig.node.json",
+    "build:main": "tsc -p tsconfig.electron.json && node scripts/build-browser.ts",
+    "build": "npm run typecheck && node scripts/build-browser.ts && vite build --base=./",
     "start": "npm run build && electron .",
-    "test": "node --test tests/*.test.cjs",
-    "package": "npm run build && node scripts/package.mjs"
+    "test": "npm run build:main && node --test tests/*.test.ts",
+    "test:audio": "npm run build:main && electron build/tests/meet-audio-runner.cjs .qa/meet-audio-userdata",
+    "package": "npm run build && node scripts/package.ts"
   },
   "dependencies": {
     "lucide": "1.80.0",
@@ -19,7 +22,11 @@
   },
   "devDependencies": {
     "@electron/packager": "20.3.0",
+    "@types/chrome": "0.3.8",
+    "@types/node": "24.19.4",
+    "@types/three": "0.187.0",
     "electron": "45.5.0",
+    "typescript": "7.0.2",
     "vite": "8.3.8"
   }
 }
