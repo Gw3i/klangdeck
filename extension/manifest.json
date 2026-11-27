@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Klangdeck for Google Meet",
+  "version": "1.3.0",
+  "description": "Mixes Klangdeck sounds locally into your Google Meet microphone.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo6VZah/z2YP23lacgy4ie+Vv0Ji0pBU93mby8Tw1UsqZZvSvbmVYmdk+Yc3VtqXYLOJaSsVKtJ4fdP4SB8ftNotZ5zlO0dZq7oljYqyUjqCSYnjoJGc1K7gy1e0KZJg9hKuSSqUnR6nTPxyMwzskJO3ANJYDtKBbyQ4Knmdm5wfOhayS8MvICmAG8gUA0J+lNTWyYDfoPBfy8XqqIQAA7Lizli5RqdDJklvQg2DKfZOHq9WGg69k8rxH4QrQl25a6ALYqECFArmkh1qSQ7Gw//RCni1g7o5NLHadrrHaDnFx9XrQp4PPnCNrDySo/d4GX57kVc9rIiktpC46vlLGzwIDAQAB",
+  "minimum_chrome_version": "120",
+  "permissions": [
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://meet.google.com/*"
+      ],
+      "js": [
+        "mixer.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://meet.google.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "Klangdeck for Google Meet",
+    "default_popup": "popup.html"
+  }
+}

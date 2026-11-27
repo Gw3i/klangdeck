@@ -1,0 +1,15 @@
+node_modules/
+dist/
+release/
+.packaging/
+.qa/
+.DS_Store
+
+# Local planning, credentials, and user data
+.context/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+userData/

@@ -1,0 +1,44 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const api = import('../src/icons.js');
+
+test('icon migration preserves existing sound references and pad metadata', async () => {
+  const { migratePadIcons, isIcon } = await api;
+  const original = { current:0, banks:[{ id:'bank-a', name:'Meine Bank', pads:[
+    { audio:'sound-123', demo:null, binding:'q', name:'Applaus' },
+    { audio:'sound-456', demo:null, binding:'w', name:'Gong', icon:'Heart', iconChosen:true }
+  ] }] };
+  const before=structuredClone(original);
+  const { next, changed }=migratePadIcons(original,()=>.5);
+  assert.equal(changed,true);
+  assert.deepEqual(original,before);
+  assert.ok(isIcon(next.banks[0].pads[0].icon));
+  const migrated={...next.banks[0].pads[0]};delete migrated.icon;delete migrated.iconChosen;
+  assert.deepEqual(migrated,original.banks[0].pads[0]);
+  assert.deepEqual(next.banks[0].pads[1],original.banks[0].pads[1]);
+  const repeated=migratePadIcons(next,()=>.99);
+  assert.equal(repeated.changed,false);
+  assert.deepEqual(repeated.next,next);
+});
+
+test('search returns the complete offline catalog without pagination', async () => {
+  const { iconIds, searchIcons }=await api;
+  const all=searchIcons('').items;
+  assert.ok(iconIds.length>1500);
+  assert.deepEqual([...all].sort(),[...iconIds]);
+  assert.equal(new Set(all).size,iconIds.length);
+  assert.ok(searchIcons('herz').items.includes('Heart'));
+  assert.ok(searchIcons('music').items.includes('Music'));
+  assert.equal(searchIcons('no-such-icon-zzzzz').total,0);
+});
+
+test('invalid stored icons fall back safely without changing valid choices', async () => {
+  const { safeIcon, randomIcon, isIcon, migratePadIcons }=await api;
+  assert.equal(safeIcon('__proto__'),'Music');
+  assert.equal(safeIcon('Heart'),'Heart');
+  assert.ok(isIcon(randomIcon(()=>0)));
+  assert.ok(isIcon(randomIcon(()=>.999999)));
+  const result=migratePadIcons({banks:[{pads:[{icon:'not-real',audio:'keep-me'}]}]},()=>0);
+  assert.equal(result.next.banks[0].pads[0].audio,'keep-me');
+  assert.ok(isIcon(result.next.banks[0].pads[0].icon));
+});
